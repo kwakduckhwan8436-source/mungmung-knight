@@ -130,6 +130,16 @@ window.AUD = (function () {
     rainbowsong: Object.assign({ world: true, bpm: 122, swing: 0.12, drums: 'hula', lead: 'musicbox2', lead2: 'flute' }, WB(['G', 'D', 'Em', 'C', 'G', 'D', 'C', 'D'], 7, false, 199)),
     quietpeak: Object.assign({ world: true, bpm: 104, drums: 'march', lead: 'bell', lead2: 'flute' }, WB(['D', 'A', 'Bm', 'G', 'D', 'A', 'G', 'A'], 2, false, 223)),
     echocave: Object.assign({ world: true, bpm: 112, swing: 0.08, drums: 'cave', lead: 'marimba', lead2: 'voice' }, WB(['Em', 'C', 'G', 'D', 'Em', 'C', 'D', 'Em'], 4, true, 227, true)),
+    starbazaar: Object.assign({ world: true, bpm: 116, swing: 0.1, drums: 'darbuka', lead: 'oud', lead2: 'musicbox' }, WB(['Am', 'G', 'F', 'E', 'Am', 'G', 'F', 'E'], 9, true, 233)),
+    sandpalace: Object.assign({ world: true, bpm: 100, drums: 'darbuka', lead: 'flute', lead2: 'strings' }, WB(['D', 'Bm', 'G', 'A', 'D', 'Bm', 'G', 'A'], 2, false, 239)),
+    clocklull: Object.assign({ world: true, bpm: 92, drums: 'tick', lead: 'musicbox', lead2: 'flute' }, WB(['C', 'Am', 'F', 'G', 'C', 'Am', 'F', 'G'], 0, false, 241)),
+    firstdawn: Object.assign({ world: true, bpm: 108, drums: 'light', lead: 'bell', lead2: 'strings' }, WB(['G', 'Em', 'C', 'D', 'G', 'Em', 'C', 'D'], 7, false, 251)),
+    oldcatrep: Object.assign({ world: true, bpm: 104, drums: 'light', lead: 'musicbox', lead2: 'strings' }, WB(['C', 'Am', 'F', 'G', 'C', 'Em', 'F', 'G'], 4, false, 277)),
+    lastgate: Object.assign({ world: true, bpm: 120, drums: 'battle', lead: 'brass', lead2: 'strings' }, WB(['Em', 'C', 'D', 'B', 'Em', 'C', 'D', 'Em'], 2, true, 281, true)),
+    icehaven: Object.assign({ world: true, bpm: 116, drums: 'light', lead: 'bell', lead2: 'strings' }, WB(['G', 'D', 'Em', 'C', 'G', 'D', 'C', 'D'], 3, false, 269)),
+    whalesong: Object.assign({ world: true, bpm: 96, drums: 'light', lead: 'flute', lead2: 'strings' }, WB(['Am', 'F', 'C', 'G', 'Am', 'F', 'G', 'Am'], 4, true, 271)),
+    windhome: Object.assign({ world: true, bpm: 112, drums: 'light', lead: 'flute', lead2: 'strings' }, WB(['F', 'C', 'Dm', 'Bb', 'F', 'C', 'Bb', 'C'], 5, false, 257)),
+    stormcrown: Object.assign({ world: true, bpm: 126, drums: 'battle', lead: 'brass', lead2: 'strings' }, WB(['Dm', 'Bb', 'C', 'A', 'Dm', 'Bb', 'C', 'Dm'], 2, true, 263, true)),
     graytown: Object.assign({ world: true, bpm: 98, drums: 'tick', lead: 'musicbox', lead2: 'strings' }, WB(['Am', 'F', 'C', 'G', 'Am', 'F', 'G', 'Am'], 9, true, 211, true)),
     mapw: Object.assign({ world: true, bpm: 100, swing: 0.2, drums: 'hula', lead: 'marimba', lead2: 'musicbox' }, WB(['F', 'C', 'Dm', 'Bb', 'F', 'C', 'Bb', 'C'], 5, false, 149, true)),
     cave: { world: true, bpm: 126, drums: 'cave', lead: 'marimba', lead2: 'bell',
@@ -683,10 +693,11 @@ window.AUD = (function () {
     die: () => sx(t => { const g = AC.createGain(); g.connect(sfxG); env(g, t, 0.005, 0.14, 0.12, 0.01, t + 0.14, 0.05); noise(t, 0.18, g, 'lowpass', 2500, 0.8); blip(t, 500, 0.12, 'square', 0.05, -350); }),
     start: () => sx(t => { bark(t, 450, sfxG, 0.5); blip(t + 0.15, 523, 0.1, 'square', 0.08); blip(t + 0.25, 784, 0.18, 'square', 0.08); }),
     woof: () => sx(t => bark(t, 430 + Math.random() * 60, sfxG, 0.35)),
+    pet: k => sx(t => { const f = k === 'big' ? 250 : k === 'yap' ? 720 : 440; bark(t, f + Math.random() * 40, sfxG, 0.34, k || 'woof'); if (k === 'yap') bark(t + 0.16, f + 60, sfxG, 0.28, 'yap'); }),
     growl: () => sx(t => bark(t, 250, sfxG, 0.7, 'big')),
   };
   function setMusic(on) { st.music = on; if (musicG) musicG.gain.setTargetAtTime(on ? 0.34 : 0, AC.currentTime, 0.05); }
   function setSfx(on) { st.sfx = on; if (sfxG) sfxG.gain.setTargetAtTime(on ? 0.6 : 0, AC.currentTime, 0.05); }
   function barkSample(kind) { const P = { yap: [640, 0.13, 0.25, 11], woof: [430, 0.2, 0.45, 23], big: [255, 0.27, 0.7, 41] }[kind]; return makeBark(44100, P[0], P[1], P[2], P[3]); }
-  return { BUILD: '1.6.0', SONG_LYRICS: M_LYR, init, renderOffline, barkSample, play, stop, lyric, SFX, setMusic, setSfx, LYRICS, get ready() { return !!AC; }, get current() { return cur && cur.name; } };
+  return { BUILD: '2.3.0', SONG_LYRICS: M_LYR, init, renderOffline, barkSample, play, stop, lyric, SFX, setMusic, setSfx, LYRICS, get ready() { return !!AC; }, get current() { return cur && cur.name; } };
 })();
