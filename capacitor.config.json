@@ -1,0 +1,8 @@
+{
+  "appId": "com.duckhwan.mungmungknight",
+  "appName": "멍멍기사 디펜스",
+  "webDir": "www",
+  "android": {
+    "backgroundColor": "#2a1a10"
+  }
+}

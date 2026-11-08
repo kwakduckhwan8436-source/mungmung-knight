@@ -1,0 +1,17 @@
+{
+  "name": "멍멍기사 디펜스",
+  "short_name": "멍멍기사",
+  "description": "강아지 기사와 동료들이 뼈다귀 왕국을 지키는 가로형 디펜스 게임",
+  "lang": "ko",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#2a1a10",
+  "theme_color": "#8d5a2b",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
