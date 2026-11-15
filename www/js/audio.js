@@ -51,7 +51,7 @@ window.AUD = (function () {
   ];
   // 마디(8분음표 8개)마다 코드
   const CHORDS = ['C', 'G', /*1절*/ 'C', 'C', 'F', 'C', 'Am', 'G', 'G', 'C', /*후렴*/ 'C', 'F', 'C', 'G', 'Dm', 'G', 'C', 'F', 'C', 'C'];
-  const CH = { D: [2, 6, 9], D7: [2, 6, 12], A: [9, 13, 16], Bb: [10, 14, 17], B: [11, 15, 18], Gm: [7, 10, 14], Eb: [3, 7, 10], E: [4, 8, 11], G7: [7, 11, 17], Em: [4, 7, 11], C: [0, 4, 7], F: [5, 9, 12], G: [7, 11, 14], Am: [9, 12, 16], Dm: [2, 5, 9], Cm: [0, 3, 7], Fm: [5, 8, 12], Ab: [8, 12, 15], Bm: [11, 14, 18], 'F#m': [6, 9, 13] };
+  const CH = { D: [2, 6, 9], D7: [2, 6, 12], A: [9, 13, 16], Bb: [10, 14, 17], B: [11, 15, 18], Gm: [7, 10, 14], Eb: [3, 7, 10], E: [4, 8, 11], G7: [7, 11, 17], Em: [4, 7, 11], C: [0, 4, 7], F: [5, 9, 12], G: [7, 11, 14], Am: [9, 12, 16], Dm: [2, 5, 9], Cm: [0, 3, 7], Fm: [5, 8, 12], Ab: [8, 12, 15], Bm: [11, 14, 18], 'F#m': [6, 9, 13], 'C#m': [1, 4, 8] };
   const MINOR_CH = { C: 'Cm', F: 'Fm', G: 'G', Am: 'Ab', Dm: 'Fm' };
   // v1.2 장별 전투곡 대확장: 코드 진행에 맞춰 멜로디를 자동 작곡 (씨앗값이 같으면 항상 같은 곡)
   const NN = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
@@ -74,15 +74,15 @@ window.AUD = (function () {
     });
     return out;
   }
-  const WB = (bars, key, minor, seed, calm) => { const b2 = bars.concat(bars); return { bars, mel: genMel(b2, key, minor, seed, calm) }; };
+  const WB = (bars, key, minor, seed, calm) => { const b2 = bars.concat(bars); return { bars, mel: genMel(b2, key, minor, seed, calm), seed, key, minor, calm }; };
   const SONGS = {
     theme:  { bpm: 116, lead: 'voice', drums: 'pop', bark: true },
     map:    { bpm: 96, lead: 'bell', drums: 'light', bark: false },
     battle: { bpm: 146, lead: 'square', drums: 'battle', bark: true },
     boss:   { bpm: 136, lead: 'saw', drums: 'battle', bark: false, minor: true },
     anime:  { bpm: 152, anime: true },
-    march:  { bpm: 144, march: true, vocal: true, lead: 'brass', drums: 'march' },
-    puppy:  { bpm: 132, march: true, vocal: true, lead: 'marimba', drums: 'puppy', puppy: true, swing: 0.3 },
+    march:  { bpm: 144, march: true, lead: 'brass', drums: 'march' }, // v4.6 노래(가사) 빼고 악기 연주만
+    puppy:  { bpm: 132, march: true, lead: 'marimba', drums: 'puppy', puppy: true, swing: 0.3 }, // v4.6 노래(가사) 빼고 마림바 연주
     mapp:   { bpm: 112, march: true, lead: 'marimba', drums: 'light', puppy: true, swing: 0.3 },
     mapm:   { bpm: 108, march: true, lead: 'bell', drums: 'light', noIntro: false },
     battlem:{ bpm: 158, march: true, lead: 'brass', drums: 'battle' },
@@ -107,6 +107,23 @@ window.AUD = (function () {
       bars: ['F', 'Dm', 'Bb', 'C', 'F', 'Am', 'Bb', 'C'],
       mel: [['A5', 2], ['C6', 1], ['A5', 1], ['F5', 4], ['D5', 2], ['F5', 1], ['A5', 1], ['G5', 4], ['Bb5', 2], ['A5', 1], ['G5', 1], ['F5', 2], ['D5', 2], ['E5', 6], ['C5', 2],
         ['F5', 2], ['A5', 2], ['C6', 3], ['A5', 1], ['E5', 2], ['G5', 2], ['C6', 4], ['D6', 2], ['C6', 1], ['Bb5', 1], ['A5', 2], ['F5', 2], ['G5', 3], ['A5', 1], ['F5', 4]] },
+    // v2.6 신나는 일반 전투곡 8곡 (판마다 번갈아)
+    fiesta2: Object.assign({ world: true, bpm: 142, swing: 0.15, drums: 'festival', lead: 'brass', lead2: 'marimba' }, WB(['Bb', 'Eb', 'F', 'Bb', 'Gm', 'Eb', 'F', 'Bb'], 10, false, 383)),
+    toyparade: Object.assign({ world: true, bpm: 132, drums: 'festival', lead: 'musicbox2', lead2: 'brass' }, WB(['C', 'Am', 'Dm', 'G', 'C', 'Am', 'F', 'G'], 0, false, 389)),
+    fiesta: Object.assign({ world: true, bpm: 138, swing: 0.12, drums: 'festival', lead: 'marimba', lead2: 'brass' }, WB(['C', 'F', 'G', 'C', 'Am', 'F', 'G', 'C'], 0, false, 301)),
+    picnic: Object.assign({ world: true, bpm: 128, swing: 0.2, drums: 'festival', lead: 'uke', lead2: 'flute' }, WB(['G', 'C', 'D', 'G', 'Em', 'C', 'D', 'G'], 7, false, 307)),
+    pupparade: Object.assign({ world: true, bpm: 144, drums: 'festival', lead: 'brass', lead2: 'musicbox2' }, WB(['F', 'Bb', 'C', 'F', 'Dm', 'Bb', 'C', 'F'], 5, false, 311)),
+    villfest: Object.assign({ world: true, bpm: 132, swing: 0.2, drums: 'hula', lead: 'marimba', lead2: 'brass' }, WB(['G', 'Em', 'C', 'D', 'G', 'Em', 'Am', 'D', 'C', 'D', 'Bm', 'Em', 'C', 'Am', 'D', 'G'], 1, false, 389)), /* v3.4 마을 잔치 곡 다듬기: 16마디 · 마림바+브라스 · 훌라 북 (오리지널) */
+    vilrain: Object.assign({ world: true, bpm: 84, swing: 0.18, drums: 'light', lead: 'musicbox', lead2: 'flute' }, WB(['F', 'Dm', 'Bb', 'C', 'F', 'Am', 'Bb', 'C'], 5, false, 421, true)), /* v3.4 비 오는 날 마을 곡 (오리지널 · 느리고 포근하게) */
+    jumpjam: Object.assign({ world: true, bpm: 150, drums: 'festival', lead: 'musicbox', lead2: 'marimba' }, WB(['D', 'G', 'A', 'D', 'Bm', 'G', 'A', 'D'], 2, false, 313)),
+    sunnyrun: Object.assign({ world: true, bpm: 140, swing: 0.1, drums: 'festival', lead: 'flute', lead2: 'brass' }, WB(['A', 'D', 'E', 'A', 'F#m', 'D', 'E', 'A'], 9, false, 317)),
+    tailwag: Object.assign({ world: true, bpm: 132, swing: 0.25, drums: 'festival', lead: 'marimba', lead2: 'uke' }, WB(['E', 'A', 'B', 'E', 'C#m', 'A', 'B', 'E'], 4, false, 331)),
+    bonebeat: Object.assign({ world: true, bpm: 146, drums: 'festival', lead: 'brass', lead2: 'strings' }, WB(['Am', 'F', 'C', 'G', 'Am', 'F', 'G', 'Am'], 9, true, 337)),
+    starhop: Object.assign({ world: true, bpm: 136, swing: 0.15, drums: 'festival', lead: 'musicbox2', lead2: 'flute' }, WB(['Eb', 'Ab', 'Bb', 'Eb', 'Cm', 'Ab', 'Bb', 'Eb'], 3, false, 347)),
+    // v2.6 이야기 화면용 잔잔한 곡 3곡
+    storywarm: Object.assign({ world: true, bpm: 96, swing: 0.2, drums: 'hula', lead: 'musicbox', lead2: 'flute' }, WB(['C', 'G', 'Am', 'F', 'C', 'G', 'F', 'G'], 0, false, 353, true)),
+    storyhope: Object.assign({ world: true, bpm: 104, drums: 'tick', lead: 'bell', lead2: 'strings' }, WB(['F', 'C', 'Dm', 'Bb', 'F', 'C', 'Bb', 'C'], 5, false, 359, true)),
+    storyfun: Object.assign({ world: true, bpm: 116, swing: 0.25, drums: 'hula', lead: 'uke', lead2: 'marimba' }, WB(['G', 'Em', 'C', 'D', 'G', 'Em', 'C', 'D'], 7, false, 367, true)),
     meadow: Object.assign({ world: true, bpm: 128, drums: 'pop2', lead: 'marimba', lead2: 'flute' }, WB(['G', 'C', 'D', 'G', 'Em', 'C', 'D', 'G'], 7, false, 11)),
     forest: Object.assign({ world: true, bpm: 116, swing: 0.25, drums: 'tick', lead: 'flute', lead2: 'uke' }, WB(['Em', 'C', 'G', 'D', 'Em', 'C', 'D', 'Em'], 4, true, 23)),
     snow: Object.assign({ world: true, bpm: 120, drums: 'tick', lead: 'musicbox', lead2: 'bell' }, WB(['F', 'Dm', 'Bb', 'C', 'F', 'Am', 'Bb', 'C'], 5, false, 37, true)),
@@ -149,35 +166,36 @@ window.AUD = (function () {
   };
   /* ---------- v0.5 새 주제가 「달려라 멍멍기사」 (클래식 TV 만화 행진곡풍 오리지널) ----------
      [음, 8분음표 길이, 가사, 'b'=진짜 멍멍 소리] — 한 줄 = 2마디(8분음표 16개) */
+  // v2.7 새 주제가 「함께 짖으면 노래가 돼」 (오리지널 작사·작곡) — 한 줄 = 2마디(8분음표 16개)
   const M_LYR = [
-    '아침 해가 반짝 떠오르면', '꼬리 깃발 높이 휘날리며', '뼈다귀 검을 번쩍 들고', '오늘도 달려간다 (멍멍!)',
-    '어두운 그림자 몰려와도', '우리는 절대 물러서지 않아',
-    '멍멍멍! 멍멍기사!', '정의의 기사 멍멍기사!', '친구와 함께라면 무섭지 않아', '달려라 달려라 멍멍기사!', '용감무쌍 멍! 멍! 멍멍기사!',
+    '창문 열면 들려오는', '친구들의 멍멍 소리', '작은 꼬리 살랑살랑', '오늘도 모여라 (멍멍!)',
+    '무서운 밤이 와도', '너랑 나랑 손을 잡아',
+    '혼자 짖으면 소리지만', '함께 짖으면 노래가 돼', '멍멍 하나 멍멍 둘', '우리 모두 멍멍기사!', '랄라 멍! 멍! 노래하자!',
   ];
   const ML = (line, arr) => arr.map(([n, d, syl, b]) => [n, d, syl || '', b || 0, line]);
   const M_VERSE = [].concat(
-    ML(0, [['G4', 1, '아'], ['G4', 1, '침'], ['C5', 2, '해'], ['B4', 1, '가'], ['A4', 1, '반'], ['G4', 2, '짝'], ['E4', 1, '떠'], ['F4', 1, '오'], ['G4', 2, '르'], ['C5', 4, '면']]),
-    ML(1, [['A4', 1, '꼬'], ['A4', 1, '리'], ['D5', 2, '깃'], ['C5', 1, '발'], ['B4', 1, '높'], ['A4', 2, '이'], ['F4', 1, '휘'], ['G4', 1, '날'], ['A4', 2, '리'], ['G4', 4, '며']]),
-    ML(2, [['E5', 1, '뼈'], ['D5', 1, '다'], ['C5', 2, '귀'], ['C5', 1, '검'], ['B4', 1, '을'], ['A4', 1, '번'], ['B4', 1, '쩍'], ['C5', 4, '들'], ['G4', 4, '고']]),
-    ML(3, [['F4', 1, '오'], ['F4', 1, '늘'], ['A4', 2, '도'], ['G4', 1, '달'], ['G4', 1, '려'], ['E4', 1, '간'], ['D4', 1, '다'], ['G4', 2, '멍', 'b'], ['G4', 2, '멍', 'b'], ['r', 4]]));
+    ML(0, [['E4', 1, '창'], ['G4', 1, '문'], ['C5', 2, '열'], ['B4', 2, '면'], ['A4', 1, '들'], ['G4', 1, '려'], ['A4', 2, '오'], ['G4', 4, '는'], ['r', 2]]),
+    ML(1, [['F4', 1, '친'], ['A4', 1, '구'], ['C5', 2, '들'], ['A4', 2, '의'], ['G4', 1, '멍'], ['G4', 1, '멍'], ['E4', 2, '소'], ['D4', 4, '리'], ['r', 2]]),
+    ML(2, [['E4', 1, '작'], ['E4', 1, '은'], ['G4', 2, '꼬'], ['G4', 2, '리'], ['A4', 1, '살'], ['B4', 1, '랑'], ['C5', 1, '살'], ['D5', 3, '랑'], ['r', 4]]),
+    ML(3, [['F4', 1, '오'], ['A4', 1, '늘'], ['C5', 2, '도'], ['B4', 1, '모'], ['A4', 1, '여'], ['G4', 2, '라'], ['G4', 2, '멍', 'b'], ['C5', 2, '멍', 'b'], ['r', 4]]));
   const M_PRE = [].concat(
-    ML(4, [['A4', 1, '어'], ['A4', 1, '두'], ['A4', 2, '운'], ['G4', 1, '그'], ['A4', 1, '림'], ['C5', 2, '자'], ['B4', 1, '몰'], ['A4', 1, '려'], ['G#4', 2, '와'], ['E4', 4, '도']]),
-    ML(5, [['C5', 1, '우'], ['C5', 1, '리'], ['C5', 1, '는'], ['D5', 1, '절'], ['E5', 2, '대'], ['D5', 1, '물'], ['C5', 1, '러'], ['B4', 1, '서'], ['C5', 1, '지'], ['B4', 2, '않'], ['G4', 4, '아']]));
+    ML(4, [['A4', 1, '무'], ['A4', 1, '서'], ['C5', 2, '운'], ['B4', 2, '밤'], ['A4', 1, '이'], ['G#4', 2, '와'], ['E4', 4, '도'], ['r', 3]]),
+    ML(5, [['F4', 1, '너'], ['G4', 1, '랑'], ['A4', 1, '나'], ['B4', 1, '랑'], ['C5', 2, '손'], ['D5', 2, '을'], ['E5', 2, '잡'], ['D5', 4, '아'], ['r', 2]]));
   const M_CHORUS = [].concat(
-    ML(6, [['G4', 1, '멍'], ['G4', 1, '멍'], ['C5', 2, '멍'], ['E5', 1, '멍'], ['E5', 1, '멍'], ['D5', 2, '기'], ['C5', 4, '사'], ['r', 4]]),
-    ML(7, [['A4', 1, '정'], ['A4', 1, '의'], ['A4', 1, '의'], ['G4', 1, '기'], ['A4', 2, '사'], ['C5', 1, '멍'], ['C5', 1, '멍'], ['D5', 2, '기'], ['E5', 6, '사']]),
-    ML(8, [['F4', 1, '친'], ['G4', 1, '구'], ['A4', 2, '와'], ['C5', 1, '함'], ['C5', 1, '께'], ['A4', 1, '라'], ['C5', 1, '면'], ['D5', 1, '무'], ['C5', 1, '섭'], ['B4', 1, '지'], ['A4', 1, '않'], ['G4', 4, '아']]),
-    ML(9, [['E5', 1, '달'], ['D5', 1, '려'], ['C5', 2, '라'], ['F5', 1, '달'], ['E5', 1, '려'], ['D5', 2, '라'], ['C5', 1, '멍'], ['C5', 1, '멍'], ['D5', 2, '기'], ['B4', 4, '사']]),
-    ML(10, [['G4', 1, '용'], ['A4', 1, '감'], ['B4', 1, '무'], ['C5', 1, '쌍'], ['G4', 2, '멍', 'b'], ['G4', 2, '멍', 'b'], ['E5', 1, '멍'], ['E5', 1, '멍'], ['D5', 2, '기'], ['C5', 4, '사']]));
-  const M_FAN = [['G4', 1], ['C5', 1], ['E5', 1], ['G5', 3], ['E5', 1], ['G5', 1], ['A5', 2], ['G5', 2], ['E5', 2], ['C5', 2], ['D5', 1], ['D5', 1], ['E5', 1], ['F5', 1], ['G5', 2], ['E5', 2], ['D5', 2], ['G4', 2, 'b'], ['G4', 2, 'b'], ['B4', 2]];
+    ML(6, [['C5', 1, '혼'], ['C5', 1, '자'], ['A4', 1, '짖'], ['G4', 1, '으'], ['A4', 2, '면'], ['C5', 1, '소'], ['D5', 1, '리'], ['E5', 1, '지'], ['D5', 3, '만'], ['r', 4]]),
+    ML(7, [['F5', 1, '함'], ['E5', 1, '께'], ['D5', 1, '짖'], ['C5', 1, '으'], ['D5', 2, '면'], ['E5', 1, '노'], ['D5', 1, '래'], ['C5', 1, '가'], ['C5', 5, '돼'], ['r', 2]]),
+    ML(8, [['G4', 2, '멍', 'b'], ['G4', 2, '멍', 'b'], ['A4', 1, '하'], ['C5', 1, '나'], ['G4', 2, '멍', 'b'], ['G4', 2, '멍', 'b'], ['E5', 4, '둘'], ['r', 2]]),
+    ML(9, [['F4', 1, '우'], ['A4', 1, '리'], ['C5', 1, '모'], ['D5', 1, '두'], ['E5', 2, '멍'], ['E5', 2, '멍'], ['D5', 2, '기'], ['C5', 4, '사'], ['r', 2]]),
+    ML(10, [['G4', 1, '랄'], ['A4', 1, '라'], ['C5', 2, '멍', 'b'], ['C5', 2, '멍', 'b'], ['E5', 1, '노'], ['D5', 1, '래'], ['D5', 2, '하'], ['C5', 4, '자'], ['r', 2]]));
+  const M_FAN = [['C5', 1], ['E5', 1], ['G5', 2], ['E5', 1], ['C5', 1], ['D5', 2], ['E5', 1], ['F5', 1], ['G5', 2], ['A5', 2], ['G5', 2], ['E5', 2], ['D5', 1], ['C5', 1], ['D5', 2], ['G4', 2, 'b'], ['G4', 2, 'b'], ['C5', 2], ['r', 4]];
   const M_SECT = [
     { k: 'fan', bars: ['C', 'F', 'G', 'G'], crash: true },
-    { k: 'verse', mel: M_VERSE, bars: ['C', 'C', 'Dm', 'G', 'Am', 'C', 'F', 'G'], crash: true },
+    { k: 'verse', mel: M_VERSE, bars: ['C', 'G', 'Am', 'Em', 'F', 'C', 'Dm', 'G'], crash: true },
     { k: 'pre', mel: M_PRE, bars: ['Am', 'E', 'F', 'G'], roll: true },
-    { k: 'chorus', mel: M_CHORUS, bars: ['C', 'C', 'F', 'C', 'F', 'G', 'Am', 'G7', 'G', 'C'], crash: true, full: true },
+    { k: 'chorus', mel: M_CHORUS, bars: ['C', 'Em', 'F', 'G', 'C', 'Am', 'F', 'G', 'C', 'C'], crash: true, full: true },
     { k: 'brk', mel: null, bars: ['F', 'G'], roll: true },
-    { k: 'chorus', mel: M_CHORUS, bars: ['C', 'C', 'F', 'C', 'F', 'G', 'Am', 'G7', 'G', 'C'], crash: true, full: true, tr: 1 },
-    { k: 'end', bars: ['C', 'C'], tr: 1, crash: true },
+    { k: 'chorus', mel: M_CHORUS, bars: ['C', 'Em', 'F', 'G', 'C', 'Am', 'F', 'G', 'C', 'C'], crash: true, full: true },
+    { k: 'end', bars: ['C', 'C'], crash: true },
   ];
   function brass(t, f, dur, out, v) {
     const g = AC.createGain(), lp = AC.createBiquadFilter(); lp.type = 'lowpass'; lp.Q.value = 2;
@@ -192,8 +210,8 @@ window.AUD = (function () {
     osc('sine', f, t, t + 0.6, g); const g2 = AC.createGain(); g2.gain.value = 0.35; g2.connect(g); osc('sine', f * 4, t, t + 0.12, g2); osc('triangle', f * 2, t, t + 0.3, g2);
   }
   function uke(t, freqs, out, v) { freqs.forEach((f, k) => { const g = AC.createGain(), lp = AC.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 2600; lp.connect(g); g.connect(out); env(g, t + k * 0.012, 0.002, v || 0.05, 0.18, 0.01, t + k * 0.012 + 0.2, 0.05); osc('sawtooth', f, t + k * 0.012, t + 0.4, lp); osc('triangle', f * 2, t + k * 0.012, t + 0.3, lp); }); }
-  function clap(t, out, v) { for (let k = 0; k < 3; k++) { const g = AC.createGain(); g.connect(out); env(g, t + k * 0.012, 0.001, (v || 0.22) * (k === 2 ? 1 : 0.6), 0.05, 0.01, t + k * 0.012 + 0.06, 0.04); noise(t + k * 0.012, 0.1, g, 'bandpass', 1400, 1.2); } }
-  function shaker(t, out, v) { const g = AC.createGain(); g.connect(out); env(g, t, 0.01, v || 0.05, 0.04, 0.01, t + 0.05, 0.02); noise(t, 0.08, g, 'highpass', 6000, 0.7); }
+  function clap(t, out, v) { for (let k = 0; k < 3; k++) { const g = AC.createGain(); g.connect(out); env(g, t + k * 0.012, 0.001, (v || 0.22) * DS * (k === 2 ? 1 : 0.6), 0.05, 0.01, t + k * 0.012 + 0.06, 0.04); noise(t + k * 0.012, 0.1, g, 'bandpass', 1400, 1.2); } }
+  function shaker(t, out, v) { const g = AC.createGain(); g.connect(out); env(g, t, 0.01, (v || 0.05) * DS, 0.04, 0.01, t + 0.05, 0.02); noise(t, 0.08, g, 'highpass', 6000, 0.7); }
   function squeak(t, out) { const g = AC.createGain(); g.connect(out); env(g, t, 0.005, 0.12, 0.1, 0.3, t + 0.12, 0.05); const o = osc('sine', 900, t, t + 0.2, g); o.frequency.exponentialRampToValueAtTime(1900, t + 0.08); o.frequency.exponentialRampToValueAtTime(1300, t + 0.16); }
   function snareRoll(t, dur, out) { const n = Math.floor(dur / 0.055); for (let i = 0; i < n; i++) snare(t + i * 0.055, out, 0.12 + 0.3 * i / n); }
   /* ---------- v0.8 장마다 다른 전투곡 (아라비안 · 하와이안 · 오케스트라 · 광산) ---------- */
@@ -201,20 +219,34 @@ window.AUD = (function () {
   function flute(t, f, dur, v) { const g = AC.createGain(); g.connect(musicG); g.connect(echo); env(g, t, 0.06, v || 0.09, 0.1, 0.8, t + dur * 0.92, 0.08); const o = osc('sine', f, t, t + dur + 0.15, g); vibrato([o], f, t + 0.15, t + dur + 0.15, 0.012); const gb = AC.createGain(); gb.connect(musicG); env(gb, t, 0.02, (v || 0.09) * 0.25, 0.08, 0.2, t + dur * 0.8, 0.05); noise(t, dur, gb, 'bandpass', f * 2, 3); }
   function slideGtr(t, f, dur, v) { const g = AC.createGain(), lp = AC.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 2400; lp.connect(g); g.connect(musicG); g.connect(echo); env(g, t, 0.01, v || 0.1, 0.25, 0.5, t + dur * 0.95, 0.12); const o1 = osc('triangle', f * 0.94, t, t + dur + 0.2, lp), o2 = osc('sine', f * 2 * 0.94, t, t + dur + 0.2, lp); [o1, o2].forEach((o, k) => o.frequency.exponentialRampToValueAtTime(f * (k + 1), t + 0.09)); vibrato([o1, o2], f, t + 0.2, t + dur + 0.2, 0.01); }
   function strings(t, freqs, dur, v) { const g = AC.createGain(), lp = AC.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 2600; lp.connect(g); g.connect(musicG); g.connect(echo); env(g, t, Math.min(0.12, dur * 0.3), v || 0.05, 0.2, 0.85, t + dur * 0.95, 0.15); freqs.forEach(f => { [-9, 0, 9].forEach(d => osc('sawtooth', f, t, t + dur + 0.3, lp, d)); }); }
-  function timp(t, f, v) { const g = AC.createGain(); g.connect(musicG); env(g, t, 0.003, v || 0.6, 0.6, 0.01, t + 0.7, 0.2); const o = osc('sine', f, t, t + 0.9, g); o.frequency.exponentialRampToValueAtTime(f * 0.8, t + 0.5); const g2 = AC.createGain(); g2.connect(musicG); env(g2, t, 0.002, (v || 0.6) * 0.3, 0.08, 0.01, t + 0.1, 0.03); noise(t, 0.12, g2, 'lowpass', 400, 0.7); }
-  function dum(t, v) { const g = AC.createGain(); g.connect(musicG); env(g, t, 0.002, v || 0.55, 0.2, 0.01, t + 0.22, 0.05); const o = osc('sine', 110, t, t + 0.3, g); o.frequency.exponentialRampToValueAtTime(70, t + 0.2); }
-  function tek(t, v) { const g = AC.createGain(); g.connect(musicG); env(g, t, 0.001, v || 0.2, 0.04, 0.01, t + 0.05, 0.02); noise(t, 0.06, g, 'bandpass', 3200, 2.5); }
+  function timp(t, f, v) { const g = AC.createGain(); g.connect(musicG); env(g, t, 0.003, (v || 0.6) * DS, 0.6, 0.01, t + 0.7, 0.2); const o = osc('sine', f, t, t + 0.9, g); o.frequency.exponentialRampToValueAtTime(f * 0.8, t + 0.5); const g2 = AC.createGain(); g2.connect(musicG); env(g2, t, 0.002, (v || 0.6) * 0.3, 0.08, 0.01, t + 0.1, 0.03); noise(t, 0.12, g2, 'lowpass', 400, 0.7); }
+  function dum(t, v) { const g = AC.createGain(); g.connect(musicG); env(g, t, 0.002, (v || 0.55) * DS, 0.2, 0.01, t + 0.22, 0.05); const o = osc('sine', 110, t, t + 0.3, g); o.frequency.exponentialRampToValueAtTime(70, t + 0.2); }
+  function tek(t, v) { const g = AC.createGain(); g.connect(musicG); env(g, t, 0.001, (v || 0.2) * DS, 0.04, 0.01, t + 0.05, 0.02); noise(t, 0.06, g, 'bandpass', 3200, 2.5); }
   function mbox(t, f, dur, v) { const g = AC.createGain(); g.connect(musicG); g.connect(echo); env(g, t, 0.002, v || 0.12, 0.6, 0.01, t + Math.min(1.2, dur + 0.5), 0.2); osc('sine', f, t, t + 1.6, g); const g2 = AC.createGain(); g2.connect(musicG); env(g2, t, 0.001, (v || 0.12) * 0.35, 0.15, 0.01, t + 0.25, 0.05); osc('sine', f * 3.01, t, t + 0.4, g2); osc('triangle', f * 2, t, t + 0.3, g2); }
   function wood(t, f, v) { const g = AC.createGain(); g.connect(musicG); env(g, t, 0.001, v || 0.18, 0.04, 0.01, t + 0.06, 0.02); osc('sine', f, t, t + 0.1, g); noise(t, 0.03, g, 'bandpass', f * 2, 4); }
   function anvil(t, v) { const g = AC.createGain(); g.connect(musicG); g.connect(echo); env(g, t, 0.001, v || 0.07, 0.35, 0.01, t + 0.4, 0.1); osc('sine', 2480, t, t + 0.5, g); osc('sine', 3710, t, t + 0.3, g); osc('triangle', 1240, t, t + 0.2, g); }
+  // v2.7 보스마다 다른 보스곡 40곡 (장 번호로 자동 작곡 · A/B/A' 3부 구성)
+  (function () { const PR = [['Am', 'F', 'G', 'E'], ['Dm', 'Bb', 'C', 'A'], ['Em', 'C', 'D', 'B'], ['Cm', 'Ab', 'Bb', 'G'], ['Am', 'Dm', 'E', 'Am'], ['Gm', 'Eb', 'F', 'D']], DR = ['orch', 'darbuka', 'battle', 'orch', 'festival'], LD = [['brass', 'strings'], ['strings', 'brass'], ['brass', 'oud'], ['saw', 'strings'], ['brass', 'musicbox2']];
+    const KEY = { Am: 9, Dm: 2, Em: 4, Cm: 0, Gm: 7 };
+    for (let c = 0; c < 44; c++) { const p = PR[c % PR.length], bars = p.concat(p.slice(0, 3), [p[0]]), ld = LD[c % LD.length];
+      SONGS['boss_c' + c] = Object.assign({ world: true, bpm: 146 + (c * 7) % 18, drums: DR[c % DR.length] === 'battle' ? 'orch' : DR[c % DR.length], lead: ld[0] === 'saw' ? 'brass' : ld[0], lead2: ld[1] }, WB(bars, KEY[p[0]] || 9, true, 500 + c * 7)); }
+    // v2.7 지도 낮/밤 곡
+    SONGS.mapday = Object.assign({ world: true, bpm: 108, swing: 0.22, drums: 'hula', lead: 'uke', lead2: 'marimba' }, WB(['C', 'F', 'G', 'C', 'Am', 'F', 'G', 'C'], 0, false, 811, true));
+    SONGS.mapnight = Object.assign({ world: true, bpm: 88, swing: 0.18, drums: 'tick', lead: 'musicbox', lead2: 'strings' }, WB(['Am', 'F', 'C', 'G', 'Am', 'F', 'G', 'Am'], 9, true, 823, true));
+  })();
+  // v4.6 화음은 그 마디 코드 안의 음으로만 (평행 3도 / 1.26 배 대신) — 첫 부분과 같은 울림으로 이어지게
+  function chordBelow(m, tones) { const pcs = tones.map(x => ((x % 12) + 12) % 12); for (let k = m - 3; k >= m - 9; k--) if (pcs.includes(((k % 12) + 12) % 12)) return k; return m - 12; }
   function buildWorld(name) {
-    const S = SONGS[name], e8 = 60 / S.bpm / 2, bar = 8 * e8, ev = [];
+    const S = SONGS[name], e8 = 60 / softBpm(S, name) / 2, bar = 8 * e8, ev = [];
     const swg = tt => { if (!S.swing) return tt; const pos = Math.round(tt / e8); return Math.abs(tt / e8 - pos) < 0.01 && pos % 2 ? tt + e8 * S.swing : tt; };
-    const melLen = S.mel.reduce((a, x) => a + x[1], 0) * e8, passes = 2;
+    const melLen = S.mel.reduce((a, x) => a + x[1], 0) * e8, passes = S.bars && S.mel.length > 8 ? 3 : 2;
+    // v2.6 곡 구성 A → B(후렴: 코드 돌리고 새 멜로디 + 화음 + 손뼉) → A'(반짝 아르페지오)
+    if (S.bars && !S.melB) { S.melB = S.mel; S.barsB = S.bars; } // v4.6 후렴도 첫 부분과 같은 코드 · 같은 노래 (악기와 화음만 바뀜)
     for (let p = 0; p < passes; p++) {
-      const s0 = p * melLen, ld = p ? S.lead2 : S.lead;
+      const s0 = p * melLen, chorus = p === 1 && S.melB, ld = p === 1 ? (S.lead2 || S.lead) : S.lead, MEL2 = chorus ? S.melB : S.mel;
       let tt = s0;
-      for (const [n, d] of S.mel) {
+      for (const [n, d] of MEL2) {
+        if (chorus && n !== 'r' && d >= 2) { const BBh = S.barsB || S.bars, bih = Math.floor((tt - s0) / bar + 1e-6), th = CH[BBh[bih % BBh.length]] || CH.C, fh = hz(chordBelow(midi(n), th)), dd2 = d * e8; ev.push({ t: swg(tt), fn: at => { marimba(at, fh, dd2, musicG, 0.04); } }); }
         const dd = d * e8, at0 = swg(tt);
         if (n !== 'r') { const f = hz(midi(n));
           if (ld === 'oud') ev.push({ t: at0, fn: at => { oud(at, f, dd, 0.15); if (d >= 2) oud(at + e8 * 0.5, f, dd * 0.5, 0.07); } });
@@ -230,10 +262,24 @@ window.AUD = (function () {
         tt += dd;
       }
       const nb = Math.round(melLen / bar);
+      // v2.6 A' 에서는 16분음 반짝 아르페지오, 후렴에서는 손뼉과 「멍!」 추임새
+      for (let bi = 0; bi < nb; bi++) { const c = (chorus ? S.barsB : S.bars) ? (chorus ? S.barsB : S.bars)[bi % 8] : 'C', tn = CH[c] || CH.C, b0 = s0 + bi * bar;
+        if (p === 2) for (let i = 0; i < 8; i++) { const f = hz(72 + tn[[0, 1, 2, 1][i % 4]]); ev.push({ t: b0 + i * e8, fn: at => mbox(at, f, e8, 0.022) }); } // v4.6 8분음 · 작게
+        if (chorus && bi === nb - 1) ev.push({ t: b0 + 7 * e8, fn: at => bark(at, 660, musicG, 0.12, 'yap') }); // v4.6 손뼉·잦은 추임새 빼고 끝에 한 번만
+        if (bi === nb - 1 && p < passes - 1) for (let q = 0; q < 4; q++) ev.push({ t: b0 + (4 + q) * e8, fn: at => tom(at, 200 - q * 25, musicG) });
+      }
       for (let bi = 0; bi < nb; bi++) {
-        const c = S.bars[bi % S.bars.length], tones = CH[c] || CH.C, root = 36 + tones[0], b0 = s0 + bi * bar, last = bi === nb - 1;
+        const BB = chorus ? S.barsB : S.bars, c = BB[bi % BB.length], tones = CH[c] || CH.C, root = 36 + tones[0], b0 = s0 + bi * bar, last = bi === nb - 1;
         if (bi === 0) ev.push({ t: b0, fn: at => crash(at, musicG, p ? 0.14 : 0.1) });
-        if (S.drums === 'darbuka') {
+        if (S.drums === 'festival') { // v2.6 신나는 축제 그루브: 통통 베이스 + 손뼉 + 탬버린 + 브라스 찌르기
+          [[0, 0], [1.5, 0], [3, 7], [4, 12], [5.5, 7], [7, 5]].forEach(([i, iv]) => ev.push({ t: b0 + i * e8, fn: at => bass(at, hz(root + iv), e8 * 0.9, musicG, 'square') }));
+          [0, 3, 4].forEach(i => ev.push({ t: b0 + i * e8, fn: at => kick(at, musicG, i === 0 ? 0.85 : 0.6) }));
+          [2, 6].forEach(i => { ev.push({ t: b0 + i * e8, fn: at => snare(at, musicG, 0.26) }); ev.push({ t: b0 + i * e8, fn: at => clap(at, musicG, 0.15) }); });
+          for (let i = 0; i < 8; i++) ev.push({ t: swg(b0 + i * e8), fn: at => shaker(at, musicG, i % 2 ? 0.05 : 0.03) });
+          [1, 3.5, 5, 7].forEach(i => { const fs = tones.map(x => hz(60 + x)); ev.push({ t: b0 + i * e8, fn: at => fs.forEach(f => marimba(at, f, e8 * 0.6, musicG, 0.035)) }); });
+          if (bi % 2 === 1) ev.push({ t: b0 + 6 * e8, fn: at => { brass(at, hz(60 + tones[1]), e8, musicG, 0.06); brass(at, hz(60 + tones[2]), e8, musicG, 0.05); } });
+          if (p) ev.push({ t: b0, fn: at => pad(at, tones.map(x => hz(60 + x)), bar * 0.95, 0.016) });
+        } else if (S.drums === 'darbuka') {
           ev.push({ t: b0, fn: at => bass(at, hz(38), bar * 0.95, musicG, 'triangle') });
           [0, 3, 4, 6].forEach(i => ev.push({ t: b0 + i * e8, fn: at => dum(at, i === 0 ? 0.6 : 0.4) }));
           [2, 5, 7].forEach(i => ev.push({ t: b0 + i * e8, fn: at => tek(at, 0.18) }));
@@ -273,7 +319,7 @@ window.AUD = (function () {
     return { name, ev, loop: melLen * passes, notes: [], melStart: 0 };
   }
   function buildMarch(name) {
-    const S = SONGS[name], e8 = 60 / S.bpm / 2, bar = 8 * e8, ev = [], notes = [];
+    const S = SONGS[name], e8 = 60 / softBpm(S, name) / 2, bar = 8 * e8, ev = [], notes = [];
     const mn = m => S.minor ? toMinor(m) : m;
     const swg = tt => { if (!S.swing) return tt; const pos = Math.round(tt / e8); return Math.abs(tt / e8 - pos) < 0.01 && pos % 2 ? tt + e8 * S.swing : tt; };
     let t = 0;
@@ -299,12 +345,12 @@ window.AUD = (function () {
         let tt = s0;
         for (const [n, d, syl, fl, line] of sec.mel) {
           const dd = d * e8;
-          if (n !== 'r') { const m = mn(midi(n) + tr), at0 = tt;
+          if (n !== 'r') { const m = mn(midi(n) + tr), at0 = tt, hb0 = sec.bars[Math.min(sec.bars.length - 1, Math.floor((tt - s0) / bar + 1e-6))], hb = S.minor ? (MINOR_CH[hb0] || hb0) : hb0, hm = chordBelow(m, (CH[hb] || CH.C).map(x => x + tr));
             if (S.vocal) notes.push({ t: at0, d: dd, syl, line, bark: fl === 'b' });
             const ta = swg(at0); if (S.vocal) notes[notes.length - 1].t = ta;
             if (fl === 'b') ev.push({ t: ta, fn: at => bark(at, hz(m), musicG, 0.6, S.puppy ? 'yap' : 'woof') });
-            else if (S.vocal && S.puppy) ev.push({ t: ta, fn: at => { voice(at, hz(m), dd, syl, musicG); marimba(at, hz(m + 12), dd, musicG, 0.09); if (sec.full) voice(at, hz(m - 4), dd, syl, musicG); } });
-            else if (S.vocal) ev.push({ t: at0, fn: at => { voice(at, hz(m), dd, syl, musicG); lead(at, hz(m + 12), dd, musicG, 'bell'); if (sec.full) { voice(at, hz(m - 4), dd, syl, musicG); brass(at, hz(m), dd, musicG, 0.045); } } });
+            else if (S.vocal && S.puppy) ev.push({ t: ta, fn: at => { voice(at, hz(m), dd, syl, musicG); marimba(at, hz(m + 12), dd, musicG, 0.09); if (sec.full) voice(at, hz(hm), dd, syl, musicG); } });
+            else if (S.vocal) ev.push({ t: at0, fn: at => { voice(at, hz(m), dd, syl, musicG); lead(at, hz(m + 12), dd, musicG, 'bell'); if (sec.full) { voice(at, hz(hm), dd, syl, musicG); brass(at, hz(m), dd, musicG, 0.045); } } });
             else leadNote(at0, m, dd); }
           tt += dd;
         }
@@ -374,6 +420,9 @@ window.AUD = (function () {
     const base = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 }[m[1]];
     return base + (m[2] === '#' ? 1 : m[2] === 'b' ? -1 : 0) + (+m[3] + 1) * 12;
   }
+  /* v4.4 부드러운 음악: 북소리 0.5배 · 빠르기 느긋하게 (마을·지도·이야기 0.84배, 전투 0.92배, 보스 0.95배) */
+  const DS = 0.5;
+  const softBpm = (S, name) => S.bpm * (/boss/.test(name) ? 0.95 : /battle|march|anime|volcano|castle|finale/.test(name) ? 0.92 : 0.84);
   const hz = m => 440 * Math.pow(2, (m - 69) / 12);
   function toMinor(m) { const pc = ((m % 12) + 12) % 12; return (pc === 4 || pc === 9 || pc === 11) ? m - 1 : m; }
 
@@ -381,17 +430,23 @@ window.AUD = (function () {
     master = AC.createGain(); master.gain.value = 0.85;
     const comp = AC.createDynamicsCompressor(); comp.threshold.value = -14; comp.ratio.value = 3;
     master.connect(comp); comp.connect(AC.destination);
-    musicG = AC.createGain(); musicG.gain.value = (st.music || offline) ? 0.34 : 0; musicG.connect(master);
+    musicG = AC.createGain(); musicG.gain.value = (st.music || offline) ? 0.3 : 0;
+    { /* v4.4 마음이 편해지는 소리: 높은 소리를 부드럽게 깎는 따뜻한 필터 + 잔잔한 울림(리버브) */
+      const warm = AC.createBiquadFilter(); warm.type = 'lowpass'; warm.frequency.value = 2400; warm.Q.value = 0.5;
+      const rv = AC.createConvolver(), L = Math.floor(AC.sampleRate * 2.4), ir = AC.createBuffer(2, L, AC.sampleRate);
+      for (let c = 0; c < 2; c++) { const d = ir.getChannelData(c); for (let i = 0; i < L; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / L, 3.2); } rv.buffer = ir;
+      const wet = AC.createGain(), dry = AC.createGain(); wet.gain.value = 0.28; dry.gain.value = 0.86;
+      musicG.connect(warm); warm.connect(dry); dry.connect(master); warm.connect(rv); rv.connect(wet); wet.connect(master); }
     sfxG = AC.createGain(); sfxG.gain.value = st.sfx ? 0.6 : 0; sfxG.connect(master);
     echo = AC.createDelay(1); echo.delayTime.value = 0.26;
-    const fb = AC.createGain(); fb.gain.value = 0.28; const eg = AC.createGain(); eg.gain.value = 0.22;
+    const fb = AC.createGain(); fb.gain.value = 0.3; const eg = AC.createGain(); eg.gain.value = 0.24;
     echo.connect(fb); fb.connect(echo); echo.connect(eg); eg.connect(musicG);
     // 디스토션 기타 버스
     gtr = AC.createGain(); gtr.gain.value = 1;
     const sh = AC.createWaveShaper(), cv = new Float32Array(1024); for (let i = 0; i < 1024; i++) { const x = i / 511.5 - 1; cv[i] = Math.tanh(x * 7) * 0.8; } sh.curve = cv; sh.oversample = '2x';
     const glp = AC.createBiquadFilter(); glp.type = 'lowpass'; glp.frequency.value = 3000; glp.Q.value = 0.8;
     const ghp = AC.createBiquadFilter(); ghp.type = 'highpass'; ghp.frequency.value = 90;
-    const gout = AC.createGain(); gout.gain.value = 0.11;
+    const gout = AC.createGain(); gout.gain.value = 0.045; /* v4.4 찌그러진 기타 소리 크게 줄임 */
     gtr.connect(sh); sh.connect(ghp); ghp.connect(glp); glp.connect(gout); gout.connect(musicG);
     noiseBuf = AC.createBuffer(1, AC.sampleRate, AC.sampleRate);
     const d = noiseBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
@@ -430,13 +485,13 @@ window.AUD = (function () {
     const f = AC.createBiquadFilter(); f.type = filt; f.frequency.value = fq; f.Q.value = q || 1;
     s.connect(f); f.connect(out); s.start(t, Math.random() * 0.5); s.stop(t + dur + 0.02); return f;
   }
-  function kick(t, out, v) { const g = AC.createGain(); g.connect(out); env(g, t, 0.003, v || 0.9, 0.12, 0.01, t + 0.13, 0.05);
+  function kick(t, out, v) { const g = AC.createGain(); g.connect(out); env(g, t, 0.003, (v || 0.9) * DS, 0.12, 0.01, t + 0.13, 0.05);
     const o = osc('sine', 150, t, t + 0.25, g); o.frequency.exponentialRampToValueAtTime(42, t + 0.14); }
-  function snare(t, out, v) { const g = AC.createGain(); g.connect(out); env(g, t, 0.002, v || 0.38, 0.11, 0.01, t + 0.12, 0.04);
+  function snare(t, out, v) { const g = AC.createGain(); g.connect(out); env(g, t, 0.002, (v || 0.38) * DS, 0.11, 0.01, t + 0.12, 0.04);
     noise(t, 0.16, g, 'bandpass', 1900, 0.7); const g2 = AC.createGain(); g2.connect(out); env(g2, t, 0.002, 0.2, 0.06, 0.01, t + 0.06, 0.03); osc('triangle', 190, t, t + 0.1, g2); }
-  function hat(t, out, v) { const g = AC.createGain(); g.connect(out); env(g, t, 0.001, v || 0.1, 0.035, 0.01, t + 0.035, 0.02); noise(t, 0.06, g, 'highpass', 7500, 0.7); }
+  function hat(t, out, v) { const g = AC.createGain(); g.connect(out); env(g, t, 0.001, (v || 0.1) * DS, 0.035, 0.01, t + 0.035, 0.02); noise(t, 0.06, g, 'highpass', 7500, 0.7); }
   function bass(t, f, dur, out, type) {
-    const g = AC.createGain(); const lp = AC.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = type === 'square' ? 900 : 1400; lp.connect(g); g.connect(out);
+    const g = AC.createGain(); const lp = AC.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = type === 'square' ? 700 : 1000; /* v4.4 더 둥글게 */ lp.connect(g); g.connect(out);
     env(g, t, 0.005, 0.32, 0.1, 0.6, t + dur * 0.85, 0.05); osc(type || 'triangle', f, t, t + dur + 0.1, lp);
   }
   function pluck(t, f, out, v) { const g = AC.createGain(); g.connect(out); env(g, t, 0.003, v || 0.07, 0.15, 0.01, t + 0.16, 0.05); osc('triangle', f, t, t + 0.25, g); }
@@ -537,10 +592,10 @@ window.AUD = (function () {
     [[f, -7], [f, 7], [f * 1.5, 0], [f * 2, 3]].forEach(([fq, dt]) => osc('sawtooth', fq, t, t + dur + 0.08, g, dt)); }
   function pad(t, freqs, dur, v) { const g = AC.createGain(); const lp = AC.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 2200; lp.connect(g); g.connect(musicG); g.connect(echo);
     env(g, t, 0.25, v, 0.3, 0.8, t + dur, 0.35); freqs.forEach(fq => { osc('sawtooth', fq, t, t + dur + 0.5, lp, -9); osc('sawtooth', fq, t, t + dur + 0.5, lp, 9); }); }
-  function crash(t, out, v) { const g = AC.createGain(); g.connect(out); env(g, t, 0.002, v || 0.16, 1.1, 0.01, t + 1.2, 0.3); noise(t, 1.5, g, 'highpass', 5200, 0.6); }
+  function crash(t, out, v) { const g = AC.createGain(); g.connect(out); env(g, t, 0.002, (v || 0.16) * DS, 1.1, 0.01, t + 1.2, 0.3); noise(t, 1.5, g, 'highpass', 5200, 0.6); }
   function tom(t, f, out) { const g = AC.createGain(); g.connect(out); env(g, t, 0.002, 0.5, 0.18, 0.01, t + 0.2, 0.05); const o = osc('sine', f, t, t + 0.3, g); o.frequency.exponentialRampToValueAtTime(f * 0.55, t + 0.22); }
   function buildAnime() {
-    const S = SONGS.anime, e8 = 60 / S.bpm / 2, ev = [], notes = [], bar = 8 * e8;
+    const S = SONGS.anime, e8 = 60 / softBpm(S, 'anime') / 2, ev = [], notes = [], bar = 8 * e8;
     let t = 0;
     const melFor = { hook: null, v1: MEL.slice(0, MEL.findIndex(x => x[4] === 4)), v2: A_V2, pre: A_PRE, ch: MEL.slice(MEL.findIndex(x => x[4] === 4)), brk: null, end: null };
     for (const sec of A_SECT) {
@@ -602,7 +657,7 @@ window.AUD = (function () {
     if (SONGS[name].world) return buildWorld(name);
     if (SONGS[name].anime) return buildAnime();
     if (SONGS[name].march) return buildMarch(name);
-    const S = SONGS[name], e8 = 60 / S.bpm / 2, ev = [];
+    const S = SONGS[name], e8 = 60 / softBpm(S, name) / 2, ev = [];
     const mn = m => S.minor ? toMinor(m) : m;
     let t = 0;
     // 인트로 리프
@@ -687,6 +742,10 @@ window.AUD = (function () {
     slam: () => sx(t => { kick(t, sfxG, 1); const g = AC.createGain(); g.connect(sfxG); env(g, t, 0.005, 0.3, 0.25, 0.01, t + 0.25, 0.1); noise(t, 0.35, g, 'lowpass', 900, 1); }),
     bark: () => sx(t => { bark(t, 430, sfxG, 0.6); bark(t + 0.24, 450, sfxG, 0.6); bark(t + 0.5, 420, sfxG, 0.7); }),
     storm: () => sx(t => { for (let i = 0; i < 8; i++) blip(t + i * 0.05, 400 + Math.random() * 800, 0.14, 'triangle', 0.1, -250); kick(t + 0.3, sfxG, 1); }),
+    // v2.7 승리 노래(4초) · 패배 노래(3초)
+    winSong: () => sx(t => { const e = 60 / 150 / 2; [['C5', 1], ['E5', 1], ['G5', 1], ['C6', 3], ['A5', 1], ['G5', 1], ['E5', 1], ['G5', 1], ['C6', 6]].reduce((tt, [n, d]) => { const f = hz(midi(n)); brass(tt, f / 2, d * e, musicG, 0.1); marimba(tt, f, d * e, musicG, 0.14); return tt + d * e; }, t);
+      [0, 4, 7, 12].forEach(iv => strings(t + 16 * e, [hz(60 + iv)], 1.4, 0.04)); [0, 2, 4, 6].forEach(i => { kick(t + i * 2 * e, musicG, 0.5); }); crash(t + 16 * e, musicG, 0.14); bark(t + 17 * e, 700, musicG, 0.35, 'yap'); bark(t + 19 * e, 520, musicG, 0.35, 'woof'); }),
+    loseSong: () => sx(t => { const e = 60 / 84 / 2; [['G4', 2], ['F4', 2], ['E4', 2], ['D4', 2], ['C4', 6]].reduce((tt, [n, d]) => { const f = hz(midi(n)); mbox(tt, f, d * e, 0.14); strings(tt, [f / 2], d * e, 0.03); return tt + d * e; }, t); bark(t + 14 * e, 380, musicG, 0.25, 'woof'); }),
     win: () => sx(t => { [523, 659, 784, 1046].forEach((f, i) => blip(t + i * 0.12, f, 0.22, 'square', 0.1)); [523, 659, 784].forEach(f => blip(t + 0.55, f * 2, 0.8, 'triangle', 0.12)); bark(t + 0.6, 450, sfxG, 0.5); bark(t + 0.85, 470, sfxG, 0.5); }),
     lose: () => sx(t => [392, 349, 311, 262].forEach((f, i) => blip(t + i * 0.22, f, 0.3, 'triangle', 0.15))),
     boss: () => sx(t => { blip(t, 80, 0.8, 'sawtooth', 0.25, 30); kick(t, sfxG, 1); kick(t + 0.4, sfxG, 1); }),
@@ -699,5 +758,5 @@ window.AUD = (function () {
   function setMusic(on) { st.music = on; if (musicG) musicG.gain.setTargetAtTime(on ? 0.34 : 0, AC.currentTime, 0.05); }
   function setSfx(on) { st.sfx = on; if (sfxG) sfxG.gain.setTargetAtTime(on ? 0.6 : 0, AC.currentTime, 0.05); }
   function barkSample(kind) { const P = { yap: [640, 0.13, 0.25, 11], woof: [430, 0.2, 0.45, 23], big: [255, 0.27, 0.7, 41] }[kind]; return makeBark(44100, P[0], P[1], P[2], P[3]); }
-  return { BUILD: '2.3.0', SONG_LYRICS: M_LYR, init, renderOffline, barkSample, play, stop, lyric, SFX, setMusic, setSfx, LYRICS, get ready() { return !!AC; }, get current() { return cur && cur.name; } };
+  return { BUILD: '4.7.0', SONG_LYRICS: M_LYR, init, renderOffline, barkSample, play, stop, lyric, SFX, setMusic, setSfx, LYRICS, get ready() { return !!AC; }, get current() { return cur && cur.name; }, /* v3.4 합창 짖기: 지금 곡의 빠르기와 박자 위치 */ get bpm() { const n = cur && cur.name; return (n && SONGS[n] && SONGS[n].bpm) || 120; }, get beatPhase() { if (!AC || !cur) return null; const b = 60 / ((SONGS[cur.name] && SONGS[cur.name].bpm) || 120); return ((AC.currentTime - cur.start) % b + b) % b / b; } };
 })();
