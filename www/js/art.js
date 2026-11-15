@@ -1014,6 +1014,50 @@ window.ART = (function () {
     { const hy = -8 + Math.sin(ph) * 0.6; E(g, 10, -5, 3, 3); g.fillStyle = '#9ad880'; g.fill(); ball(g, 14, hy, 6.4, 5.8, '#9ad880'); btnEye(g, 13, hy - 1, 1.6, '#2a1a12', P); btnEye(g, 17, hy - 1, 1.5, '#2a1a12', P); blush(g, 12, hy + 2.4, 1.6); blush(g, 18.4, hy + 2.2, 1.4); st(g, 0.8, '#3a2214'); g.beginPath(); g.arc(15.2, hy + 1.6, 1.4, 0.2, Math.PI - 0.2); g.stroke(); } /* v3.2 머리 크게 + 웃는 얼굴 */
     g.beginPath(); g.moveTo(-12, -3); g.quadraticCurveTo(-11, -17, 0, -17); g.quadraticCurveTo(11, -17, 12, -3); g.closePath(); g.fillStyle = lgr(g, '#7ac860', '#3a8a3a', 0, -17, 0, -3); g.fill();
     [[0, -11, 3.4], [-6.5, -7.5, 2.6], [6.5, -7.5, 2.6]].forEach(([x, y, r]) => { g.beginPath(); for (let q = 0; q < 6; q++) { const a = q * Math.PI / 3; g.lineTo(x + Math.cos(a) * r, y + Math.sin(a) * r * 0.8); } g.closePath(); g.fillStyle = 'rgba(200,240,160,.55)'; g.fill(); }); E(g, -4, -14, 3, 1.4); g.fillStyle = 'rgba(255,255,255,.45)'; g.fill(); RR(g, -12, -4, 24, 2.6, 1.2); g.fillStyle = '#c8e8a0'; g.fill(); g.restore(); } /* 등껍질 육각 무늬 + 광택 */
+  // v4.8 상점 펫 6종 (아기 고양이 · 펭귄 · 여우 · 판다 · 부엉이 · 유니콘)
+  const gloss = (g, x, y, rx, ry) => { E(g, x, y, rx, ry); g.fillStyle = 'rgba(255,255,255,.45)'; g.fill(); }; /* v4.9 펫 몸 광택 */
+  const collar = (g, x, y, w, col) => { RR(g, x - w / 2, y, w, 2.6, 1.3); g.fillStyle = col; g.fill(); E(g, x, y + 3.6, 1.9, 1.9); g.fillStyle = '#ffd34d'; g.fill(); st(g, 0.6, '#a87010'); g.stroke(); };
+  const petHop = (P, a) => ({ ph: ((P.walk || 0) + (P.breathe || 0)) * TAU, hop: P.moving ? -Math.abs(Math.sin(((P.walk || 0) + (P.breathe || 0)) * TAU * 2)) * a : 0 });
+  function paintPetKitten(g, P) { const { ph, hop } = petHop(P, 3); g.save(); g.translate(0, hop);
+    st(g, 3, '#f0a050'); g.beginPath(); g.moveTo(-9, -6); g.quadraticCurveTo(-18, -10 + Math.sin(ph * 2) * 3, -15, -20); g.stroke();
+    ball(g, -1, -8, 10, 7.5, '#f6b060'); E(g, 1, -5, 6, 4); g.fillStyle = '#fff4e6'; g.fill();
+    ball(g, 5, -17, 8, 7, '#f6b060'); gloss(g, 2, -21, 3, 1.6); collar(g, 3, -11, 12, '#e8404a'); [[0, -23, -0.3], [10, -23, 0.3]].forEach(([x, y, r]) => { g.save(); g.translate(x, y); g.rotate(r); g.beginPath(); g.moveTo(-3.5, 2); g.lineTo(0, -6); g.lineTo(3.5, 2); g.closePath(); g.fillStyle = '#f6b060'; g.fill(); g.beginPath(); g.moveTo(-1.8, 1); g.lineTo(0, -3.4); g.lineTo(1.8, 1); g.fillStyle = '#ffc0c8'; g.fill(); g.restore(); });
+    st(g, 1.2, '#d8803a'); [[2, -22], [5, -23], [8, -22]].forEach(([x, y]) => { g.beginPath(); g.moveTo(x, y); g.lineTo(x, y + 2.5); g.stroke(); });
+    btnEye(g, 2, -17, 1.8, '#2a1a12', P); btnEye(g, 8, -17, 1.7, '#2a1a12', P); E(g, 5, -14, 1.1, 0.8); g.fillStyle = '#ff8fa0'; g.fill(); blush(g, 0, -13.5, 2); blush(g, 10, -13.5, 1.9);
+    E(g, -5, 0, 2.8, 1.4); g.fillStyle = '#fff4e6'; g.fill(); E(g, 4, 0, 2.8, 1.4); g.fill(); g.restore(); }
+  function paintPetPenguin(g, P) { const { ph } = petHop(P, 0), sw = P.moving ? Math.sin(ph * 2) * 0.18 : 0; g.save(); g.rotate(sw);
+    E(g, -3, 0, 3.4, 1.6); g.fillStyle = '#ffa030'; g.fill(); E(g, 3, 0, 3.4, 1.6); g.fill();
+    ball(g, 0, -12, 9.5, 12, '#2a3448'); gloss(g, -4, -19, 2.4, 3); E(g, 1, -9, 6.4, 8.6); g.fillStyle = '#fbfbff'; g.fill();
+    [[-9, -10, 0.5], [9, -10, -0.5]].forEach(([x, y, r]) => { g.save(); g.translate(x, y); g.rotate(r + (P.moving ? Math.sin(ph * 4) * 0.3 : 0)); E(g, 0, 3, 2.4, 6); g.fillStyle = '#2a3448'; g.fill(); g.restore(); });
+    btnEye(g, -2, -16, 1.7, '#1a1a22', P); btnEye(g, 4, -16, 1.7, '#1a1a22', P); g.fillStyle = '#ffa030'; g.beginPath(); g.moveTo(-1, -13); g.lineTo(3, -13); g.lineTo(1, -10.5); g.closePath(); g.fill(); blush(g, -5, -12, 1.8); blush(g, 7, -12, 1.8);
+    RR(g, -7, -6, 14, 3, 1.5); g.fillStyle = '#e8404a'; g.fill(); g.restore(); }
+  function paintPetFox(g, P) { const { ph, hop } = petHop(P, 3); g.save(); g.translate(0, hop);
+    g.save(); g.translate(-9, -6); g.rotate(-0.5 + Math.sin(ph * 2) * 0.2); E(g, -6, -4, 8, 4.4); g.fillStyle = '#ff7a2a'; g.fill(); E(g, -12, -5, 3.4, 2.6); g.fillStyle = '#fff8f0'; g.fill(); g.restore();
+    ball(g, 0, -8, 9.5, 7, '#ff8a3a'); E(g, 2, -5, 5.5, 3.8); g.fillStyle = '#fff8f0'; g.fill();
+    ball(g, 6, -16, 7.5, 6.4, '#ff8a3a'); gloss(g, 3, -20, 2.6, 1.4); collar(g, 4, -10.5, 11, '#3a8ad0'); [[1, -21, -0.25], [11, -21, 0.25]].forEach(([x, y, r]) => { g.save(); g.translate(x, y); g.rotate(r); g.beginPath(); g.moveTo(-3.6, 2); g.lineTo(0, -8); g.lineTo(3.6, 2); g.closePath(); g.fillStyle = '#ff8a3a'; g.fill(); g.beginPath(); g.moveTo(-1.6, 0); g.lineTo(0, -5); g.lineTo(1.6, 0); g.fillStyle = '#3a2214'; g.fill(); g.restore(); });
+    E(g, 9, -13, 4.4, 3); g.fillStyle = '#fff8f0'; g.fill(); btnEye(g, 4, -17, 1.6, '#2a1a12', P); btnEye(g, 9, -17, 1.5, '#2a1a12', P); E(g, 12.5, -13.5, 1.2, 0.9); g.fillStyle = '#2a1a12'; g.fill(); blush(g, 3, -13, 1.8);
+    E(g, -5, 0, 2.6, 1.4); g.fillStyle = '#3a2214'; g.fill(); E(g, 4, 0, 2.6, 1.4); g.fill(); g.restore(); }
+  function paintPetPanda(g, P) { const { hop } = petHop(P, 2); g.save(); g.translate(0, hop);
+    ball(g, 0, -9, 11, 9, '#fbfbf6'); E(g, 0, -5, 11, 4); g.fillStyle = '#2a2a30'; g.fill(); E(g, -6, 0, 3.4, 2); g.fill(); E(g, 6, 0, 3.4, 2); g.fill();
+    ball(g, 1, -18, 9, 7.6, '#fbfbf6'); gloss(g, -3, -22, 3, 1.6); [[-5, -24], [7, -24]].forEach(([x, y]) => { E(g, x, y, 3.2, 3.2); g.fillStyle = '#2a2a30'; g.fill(); });
+    [[-3, -18, -0.4], [5, -18, 0.4]].forEach(([x, y, r]) => { g.save(); g.translate(x, y); g.rotate(r); E(g, 0, 0, 2.8, 3.6); g.fillStyle = '#2a2a30'; g.fill(); g.restore(); });
+    btnEye(g, -3, -18, 1.4, '#ffffff', P); btnEye(g, 5, -18, 1.4, '#ffffff', P); E(g, 1, -14.5, 1.4, 1); g.fillStyle = '#2a2a30'; g.fill(); blush(g, -6, -14, 1.9); blush(g, 8, -14, 1.9);
+    st(g, 2, '#6ab04a'); g.beginPath(); g.moveTo(10, -6); g.lineTo(15, -18); g.stroke(); E(g, 16, -18, 3, 1.4); g.fillStyle = '#8ad070'; g.fill(); g.restore(); }
+  function paintPetOwl(g, P) { const { ph } = petHop(P, 0), fl = Math.sin(ph * 4) * (P.moving ? 0.5 : 0.1); g.save(); g.translate(0, P.moving ? -4 - Math.sin(ph * 2) * 2 : 0);
+    [[-9, -12, -1], [9, -12, 1]].forEach(([x, y, d]) => { g.save(); g.translate(x, y); g.rotate(d * (0.3 + fl)); E(g, d * 3, 3, 4, 7); g.fillStyle = '#8a5a3a'; g.fill(); g.restore(); });
+    ball(g, 0, -11, 9.5, 11, '#a8744a'); gloss(g, -4, -17, 2.4, 3); E(g, 0, -7, 6, 7); g.fillStyle = '#f0dcc0'; g.fill();
+    [[-4, -16], [4, -16]].forEach(([x, y]) => { E(g, x, y, 4.2, 4.2); g.fillStyle = '#fff8e6'; g.fill(); btnEye(g, x, y, 2.2, '#2a1a12', P); });
+    g.fillStyle = '#ffa030'; g.beginPath(); g.moveTo(-1.4, -12.5); g.lineTo(1.4, -12.5); g.lineTo(0, -10); g.closePath(); g.fill();
+    [[-7, -23, -0.4], [7, -23, 0.4]].forEach(([x, y, r]) => { g.save(); g.translate(x, y); g.rotate(r); g.beginPath(); g.moveTo(-2.6, 3); g.lineTo(0, -4); g.lineTo(2.6, 3); g.closePath(); g.fillStyle = '#a8744a'; g.fill(); g.restore(); });
+    RR(g, -5, -26, 10, 3, 1.5); g.fillStyle = '#5a3a8a'; g.fill(); E(g, -2, 0, 2, 1.2); g.fillStyle = '#ffa030'; g.fill(); E(g, 2, 0, 2, 1.2); g.fill(); g.restore(); }
+  function paintPetUnicorn(g, P) { const { ph, hop } = petHop(P, 4); g.save(); g.translate(0, hop);
+    const rb = ['#ff8ac8', '#ffd34d', '#8fe08a', '#7ac8ff', '#b08aff']; rb.forEach((c, k) => { g.save(); g.translate(-10, -10 + k * 1.6); g.rotate(-0.6 + Math.sin(ph * 2 + k) * 0.15); E(g, -4, 0, 6, 1.8); g.fillStyle = c; g.fill(); g.restore(); });
+    ball(g, 0, -9, 10, 7.5, '#fff8ff'); [[-5, 0], [5, 0]].forEach(([x]) => { RR(g, x - 1.8, -4, 3.6, 5, 1.6); g.fillStyle = '#fff8ff'; g.fill(); E(g, x, 1, 2.2, 1.2); g.fillStyle = '#d0a0ff'; g.fill(); });
+    ball(g, 7, -18, 7.4, 6.6, '#fff8ff'); gloss(g, 4, -21, 2.6, 1.4); rb.slice(0, 4).forEach((c, k) => { E(g, 2 - k * 1.5, -22 + k * 2.4, 3.2, 2.2); g.fillStyle = c; g.fill(); });
+    g.beginPath(); g.moveTo(7, -24); g.lineTo(10, -34); g.lineTo(12, -23); g.closePath(); g.fillStyle = lgr(g, '#fff6b0', '#ffc83c', 0, -34, 0, -23); g.fill(); st(g, 0.8, '#c8901a'); g.stroke();
+    btnEye(g, 6, -18, 1.8, '#4a2a6a', P); btnEye(g, 11, -18, 1.6, '#4a2a6a', P); blush(g, 5, -14.5, 2); blush(g, 13, -14.5, 1.8);
+    for (let k = 0; k < 3; k++) { const a = G_T() * 2 + k * 2.1; g.globalAlpha = 0.5 + Math.sin(a) * 0.4; star(g, Math.cos(a) * 14, -18 + Math.sin(a) * 6, 2.2, '#fff6a0'); } g.globalAlpha = 1; g.restore(); }
+  const G_T = () => (typeof performance !== 'undefined' ? performance.now() / 1000 : 0);
   // v1.8 계절 한정 펫 4종
   function paintPetRabbit(g, P) { const ph = ((P.walk || 0) + (P.breathe || 0)) * TAU, hop = P.moving ? -Math.abs(Math.sin(ph * 2)) * 4 : 0; g.save(); g.translate(0, hop);
     [[-3, -0.15], [4, 0.15]].forEach(([x, r]) => { g.save(); g.translate(x, -20); g.rotate(r); E(g, 0, -8, 3.2, 8); g.fillStyle = '#fff8f0'; g.fill(); E(g, 0, -8, 1.6, 6); g.fillStyle = '#ffc8d0'; g.fill(); g.restore(); });
@@ -2120,6 +2164,12 @@ window.ART = (function () {
   defType('pet_songsquirrel', paintPetSquirrel, { x0: -30, y0: -38, x1: 16, y1: 4 });
   defType('pet_pumpkinbat', paintPetPumpkinBat, { x0: -24, y0: -32, x1: 24, y1: 6 });
   defType('pet_babydeer', paintPetDeer, { x0: -12, y0: -36, x1: 20, y1: 4 });
+  defType('pet_kitten', paintPetKitten, { x0: -22, y0: -32, x1: 18, y1: 4 });
+  defType('pet_penguin', paintPetPenguin, { x0: -24, y0: -32, x1: 24, y1: 6 });
+  defType('pet_fox', paintPetFox, { x0: -28, y0: -32, x1: 18, y1: 4 });
+  defType('pet_panda', paintPetPanda, { x0: -16, y0: -32, x1: 20, y1: 4 });
+  defType('pet_owl', paintPetOwl, { x0: -18, y0: -36, x1: 18, y1: 4 });
+  defType('pet_unicorn', paintPetUnicorn, { x0: -24, y0: -40, x1: 22, y1: 4 });
   defType('rainturtle', pbRainTurtle, { x0: -90, y0: -130, x1: 140, y1: 14 });
   defType('shadowchild', pbShadowChild, { x0: -70, y0: -200, x1: 90, y1: 14 });
   defType('mtgiant', pbMtGiant, { x0: -110, y0: -260, x1: 120, y1: 14 });
@@ -3295,5 +3345,5 @@ window.ART = (function () {
     gr.addColorStop(0, rgba(col, 1)); gr.addColorStop(0.4, rgba(col, 0.7)); gr.addColorStop(1, rgba(col, 0)); g.fillStyle = gr; g.fillRect(0, 0, 32, 32);
     return (dotC[col] = c);
   }
-  return { edgeHit, TYPES, wearType, BUILD: '4.7.0', _theme: theme, drawFit, tight, setSpriteImage, drawFore, drawGrade, paper, gearShape, DRAGON_STAGE, dragonMouth, setBgImage, HERO_BREEDS, HERO_FUR, HERO_HELM, HERO_PLUME, HERO_CAPE, DRAGON_COL, crystalShard, WKINDS, SS, eyeKit, shadowMark, LOOKS, THEMES, FONT, frame, draw, warm, heroId, clearHeroCache, FRAMES, drawBg, vignette, castle, nest, panel, button, goldG, gem, curl, icon, itemIcon, logo, softDot, mix, LI, DK, rgba, E, RR, lgr, rg, paw, bone, star, mk, paintDog };
+  return { edgeHit, TYPES, wearType, BUILD: '4.9.0', _theme: theme, drawFit, tight, setSpriteImage, drawFore, drawGrade, paper, gearShape, DRAGON_STAGE, dragonMouth, setBgImage, HERO_BREEDS, HERO_FUR, HERO_HELM, HERO_PLUME, HERO_CAPE, DRAGON_COL, crystalShard, WKINDS, SS, eyeKit, shadowMark, LOOKS, THEMES, FONT, frame, draw, warm, heroId, clearHeroCache, FRAMES, drawBg, vignette, castle, nest, panel, button, goldG, gem, curl, icon, itemIcon, logo, softDot, mix, LI, DK, rgba, E, RR, lgr, rg, paw, bone, star, mk, paintDog };
 })();
