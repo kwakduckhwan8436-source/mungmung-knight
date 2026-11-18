@@ -1,6 +1,6 @@
 {
   "name": "mungmung-knight-defense",
-  "version": "4.9.0",
+  "version": "5.2.0",
   "private": true,
   "description": "멍멍기사 디펜스 - 가로형 모바일 디펜스 게임 (HTML5 Canvas + Capacitor)",
   "scripts": {

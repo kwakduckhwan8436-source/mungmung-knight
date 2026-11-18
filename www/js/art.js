@@ -3345,5 +3345,5 @@ window.ART = (function () {
     gr.addColorStop(0, rgba(col, 1)); gr.addColorStop(0.4, rgba(col, 0.7)); gr.addColorStop(1, rgba(col, 0)); g.fillStyle = gr; g.fillRect(0, 0, 32, 32);
     return (dotC[col] = c);
   }
-  return { edgeHit, TYPES, wearType, BUILD: '4.9.0', _theme: theme, drawFit, tight, setSpriteImage, drawFore, drawGrade, paper, gearShape, DRAGON_STAGE, dragonMouth, setBgImage, HERO_BREEDS, HERO_FUR, HERO_HELM, HERO_PLUME, HERO_CAPE, DRAGON_COL, crystalShard, WKINDS, SS, eyeKit, shadowMark, LOOKS, THEMES, FONT, frame, draw, warm, heroId, clearHeroCache, FRAMES, drawBg, vignette, castle, nest, panel, button, goldG, gem, curl, icon, itemIcon, logo, softDot, mix, LI, DK, rgba, E, RR, lgr, rg, paw, bone, star, mk, paintDog };
+  return { edgeHit, TYPES, wearType, BUILD: '5.2.0', _theme: theme, drawFit, tight, setSpriteImage, drawFore, drawGrade, paper, gearShape, DRAGON_STAGE, dragonMouth, setBgImage, HERO_BREEDS, HERO_FUR, HERO_HELM, HERO_PLUME, HERO_CAPE, DRAGON_COL, crystalShard, WKINDS, SS, eyeKit, shadowMark, LOOKS, THEMES, FONT, frame, draw, warm, heroId, clearHeroCache, FRAMES, drawBg, vignette, castle, nest, panel, button, goldG, gem, curl, icon, itemIcon, logo, softDot, mix, LI, DK, rgba, E, RR, lgr, rg, paw, bone, star, mk, paintDog };
 })();
